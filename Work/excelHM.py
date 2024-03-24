@@ -44,17 +44,17 @@ formula(3)
 formula(4)
 formula(5)
 
-# Fill the photos column with formulas
+# Fill the column with formulas
+#Photos
 for i in range(2, len(column_I_data) + 1):
     sheet.cell(row=i, column=10).value = f'=SUBSTITUTE(VLOOKUP(A{i}, M:V, 10, FALSE), "//lp2.hm.com/hmgoepprod?set=", "https://lp2.hm.com/hmgoepprod?set=")'
-
+#Premium
 for i in range(2, len(column_I_data) + 1):
     sheet.cell(row=i, column=7).value = f'=IF(ISNUMBER(SEARCH("H&M Premium Selection", VLOOKUP(A{i}, M:V, 7, FALSE))), VLOOKUP(A{i}, M:V, 7, FALSE), "")'
-
+#Size
 for i in range(2, len(column_I_data) + 1):
     sheet.cell(row=i, column=8).value = f'=IF(ISNUMBER(SEARCH("Rozmiar", VLOOKUP(A{i}, M:V, 8, FALSE))), VLOOKUP(A{i}, M:V, 8, FALSE), "")'
-
-
+#Concept
 for i in range(2, len(column_I_data) + 1):
     sheet.cell(row=i, column=9).value = f'=IF(ISNUMBER(SEARCH("Dział", VLOOKUP(A{i}, M:V, 9, FALSE))), VLOOKUP(A{i}, M:V, 9, FALSE), "")'
 
