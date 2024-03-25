@@ -1,10 +1,10 @@
 import sys
-sys.path.append('../Work/api')
-
+# sys.path.append('../Work/api')
 import requests
-from api import my_api
+sys.path.append('..api/')  
+from api import api_open_weather_map
 
-api_key = my_api.api_open_weather_map
+api_key = api_open_weather_map
 city = 'Yerevan'
 lang = 'ru'
 url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&lang={lang}&units=metric'

@@ -2,7 +2,12 @@ import openpyxl
 import pandas as pd
 import os 
 
-fn = "HM.xlsx"
+fn = "DataFromHandM.xlsx"
+
+malomerit = 'По отзывам наших покупателей, данная модель идет в размер!'
+v_razmer = 'По отзывам наших покупателей, данная модель маломерит!'
+bolshemerit = 'По отзывам наших покупателей, данная модель большемерит!'
+
 
 book = openpyxl.open(fn)
 sheet = book.active
@@ -57,6 +62,9 @@ for i in range(2, len(column_I_data) + 1):
 #Concept
 for i in range(2, len(column_I_data) + 1):
     sheet.cell(row=i, column=9).value = f'=IF(ISNUMBER(SEARCH("Dział", VLOOKUP(A{i}, M:V, 9, FALSE))), VLOOKUP(A{i}, M:V, 9, FALSE), "")'
+#Bolshemerit
+for i in range(2, len(column_I_data) + 1):
+    sheet.cell(row=i, column=6).value = f'=IFERROR(CHOOSE(MATCH(VALUE(MID(VLOOKUP(A{i}, M:V, 6, FALSE),16,2)),' + '{0,41,60,101}, 1), ' + f'"{malomerit}", "{v_razmer}", "{bolshemerit}"), "")'
 
 
 
