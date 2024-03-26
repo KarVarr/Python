@@ -19,4 +19,4 @@ humidity = data['main']['humidity']
 print(f'Today in {city}')
 print(f'Descriptino: {weather_description.capitalize()}')
 print(f'Temperature: {temperature}')
-print(f'Humidity: {humidity}')
+print(f'Humidity: {humidity}') 
