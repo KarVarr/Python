@@ -1,21 +1,27 @@
 import openpyxl
 import pandas as pd
 import os 
+from googletrans import Translator
 
-fn = "HM.xlsx"
+fn = "DataFromHandM.xlsx"
 
-book = openpyxl.open(fn)
+
+
+book = openpyxl.load_workbook(fn)
 sheet = book.active
+# translator = Translator()
 
+malomerit = 'По отзывам наших покупателей, данная модель идет в размер!'
+v_razmer = 'По отзывам наших покупателей, данная модель маломерит!'
+bolshemerit = 'По отзывам наших покупателей, данная модель большемерит!'
 capitals = ['IDs','Title','Color','Description','Material','Bolshemerit','Premium','Size','Concept','Photos','']
+
 sheet.insert_cols(1, amount=len(capitals))
 
-
+#Formula in column 
 def formula(column):
-    # Fill the formula down to the last row of data in column A
-    for i in range(2, len(column_I_data) + 1):  # Start from row 3 since the formula is already in row 2
-        sheet.cell(row=i, column=column).value = "=VLOOKUP(A{}, M:V, {}, FALSE)".format(i,column)
-
+    for i in range(2, len(column_I_data) + 1): 
+        sheet.cell(row=i, column=column).value = f"=VLOOKUP(A{i}, M:V, {column}, FALSE)"
 
 for i in range(1, sheet.max_row + 1):
     value = sheet.cell(row=i, column=13).value
@@ -38,11 +44,12 @@ for i, value in enumerate(column_I_data, start=1):
     sheet.cell(row=i, column=1).value = value
 
 
-# # Fill the formula down to the last row of data in the columns
+# Fill the formula down to the last row of data in the columns
 formula(2)
 formula(3)
 formula(4)
 formula(5)
+
 
 # Fill the column with formulas
 #Photos
@@ -57,6 +64,10 @@ for i in range(2, len(column_I_data) + 1):
 #Concept
 for i in range(2, len(column_I_data) + 1):
     sheet.cell(row=i, column=9).value = f'=IF(ISNUMBER(SEARCH("Dział", VLOOKUP(A{i}, M:V, 9, FALSE))), VLOOKUP(A{i}, M:V, 9, FALSE), "")'
+#Bolshemerit
+for i in range(2, len(column_I_data) + 1):
+    sheet.cell(row=i, column=6).value = f'=IFERROR(CHOOSE(MATCH(VALUE(MID(VLOOKUP(A{i}, M:V, 6, FALSE),16,2)),' + '{0,41,60,101}, 1), ' + f'"{malomerit}", "{v_razmer}", "{bolshemerit}"), "")'
+
 
 
 
