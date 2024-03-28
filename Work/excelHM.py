@@ -23,6 +23,7 @@ def formula(column):
     for i in range(2, len(column_I_data) + 1): 
         sheet.cell(row=i, column=column).value = f"=VLOOKUP(A{i}, M:V, {column}, FALSE)"
 
+
 for i in range(1, sheet.max_row + 1):
     value = sheet.cell(row=i, column=13).value
     sheet.cell(row=i, column=1).value = value
