@@ -1,23 +1,24 @@
-import requests
-import time
-from datetime import datetime
+from api import my_api
 import telebot
+import os
 import randfacts
 from googletrans import Translator
-from pyzbar.pyzbar import decode
 from PIL import Image
-import pyzbar.pyzbar as pyzbar
-# from paddleocr import PaddleOCR
 import pytesseract
 
-import matplotlib.pyplot as plt
-
-import keras_ocr
-
-bot = telebot.TeleBot("6137716265:AAFK0DHeAqnD-LKtwnbAYSgsAFPbOMuITvQ")
+bot = telebot.TeleBot(my_api.telegram_bot)
 translator = Translator()
 
-birdhday = {"Андрей": "16.06", "Карина": "10.07", "Дима": "17.06", "Богдан": "14.06", "Аршам": "29.02", "Илья": "25.11", "Карина 2": "02.08","Карен": "03.12","Анаит": "15.07"}
+birdhday = {"Андрей": "16.06",
+             "Карина": "10.07", 
+             "Дима": "17.06",
+             "Богдан": "14.06", 
+             "Аршам": "29.02", 
+             "Илья": "25.11", 
+             "Карина 2": "02.08",
+             "Карен": "03.12",
+             "Анаит": "15.07"}
+
 help = 'Для пользования ботом нужно ввести нужную команду:\n /help - подсказки\n /start - общие правила\n /bd - дни рождения\n /facts - случайный факт\n /photo - скан штрихкода'
 
 def bd():
@@ -31,7 +32,7 @@ def send_birthday(message):
     bot.reply_to(message, bd())
 
 # def send_msg(message):
-#     TOKEN = "6137716265:AAFK0DHeAqnD-LKtwnbAYSgsAFPbOMuITvQ"
+#     TOKEN = my_api.telegram_bot
 #     chat_id = "677863095"
 #     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id}&text={message}"
 #     result = requests.get(url).json()
@@ -56,14 +57,22 @@ def send_start(message):
 #pip install "python-barcode[images]"
 #pip install paddlepaddle
 
+path = os.getcwd()
+print(path)
+image_path = "/usr/local/bin/python3 /Users/karenvardanian/Desktop/Python/Work/111.jpg"
+# image1 = Image.open("../Work/111.jpg")
+# image = Image.open("./111.jpg")
+# image2 = Image.open("123.jpg")
+image3 = Image.open(image_path)
 
-image = Image.open("111.jpg")
+text = pytesseract.image_to_string(image3)
 
-pipeline = keras_ocr.pipeline.Pipeline()
-prediction_groups = pipeline.recognize(image)
+print(text)
+# pipeline = keras_ocr.pipeline.Pipeline()
+# prediction_groups = pipeline.recognize(image)
 
-for ax, image, predictions in zip(axs, image, prediction_groups):
-    keras_ocr.tools.drawAnnotations(image=image, predictions=predictions, ax=ax)
+# for ax, image, predictions in zip(axs, image, prediction_groups):
+#     keras_ocr.tools.drawAnnotations(image=image, predictions=predictions, ax=ax)
 
 # decoded = decode(image_barcode)
 # print(decoded[0].data.decode("utf-8"))
