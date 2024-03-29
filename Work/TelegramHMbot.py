@@ -58,26 +58,27 @@ def handle_help(message):
 
 @bot.message_handler(content_types=['photo'])
 def handle_photo(message):
-    bot.reply_to(message, "Фотография получена. Обработка началась...")
-    bot.send_chat_action(message.chat.id, 'typing')
+    try:
+        bot.reply_to(message, "Фотография получена. Обработка началась...")
+        bot.send_chat_action(message.chat.id, 'typing')
     
-    photo = message.photo[-1]  
-    file_id = photo.file_id  
-    file_info = bot.get_file(file_id) 
-    file = bot.download_file(file_info.file_path) 
+        photo = message.photo[-1]  
+        file_id = photo.file_id  
+        file_info = bot.get_file(file_id) 
+        file = bot.download_file(file_info.file_path) 
 
-    # Теперь у вас есть файл фотографии в переменной 'file', и вы можете выполнить необходимые действия с ним
+        with open("photo.jpg", "wb") as photo_file:
+            photo_file.write(file)
 
-    # Например, можно сохранить фотографию на сервере
-    with open("photo.jpg", "wb") as photo_file:
-        photo_file.write(file)
-
-    recognized_text = text_recognition('photo.jpg')
-    if recognized_text == "Штрихкод не распознан!":
+        recognized_text = text_recognition('photo.jpg')
+        # bot.reply_to(message, f"[Link H&M: ](https://www2.hm.com/pl_pl/productpage.{recognized_text}.html)")
+        if recognized_text != "Штрихкод не распознан!":
+            bot.reply_to(message, f"[Link H&M: ](https://www2.hm.com/pl_pl/productpage.{recognized_text}.html)")
+        else:
+            bot.reply_to(message, recognized_text)
+    except Exception as e:
+        print(f"Ошибка при обработке фото: {e}")
         bot.reply_to(message, "Плохое качество фотографии, попробоуйте снова!")
-    else:
-        bot.reply_to(message, f"[Link H&M: ](https://www2.hm.com/pl_pl/productpage.{recognized_text}.html)")
-    # Или отправить пользователю ответ о получении фотографии
     
 bot.polling(non_stop=True)
 
