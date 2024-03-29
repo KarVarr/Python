@@ -4,8 +4,9 @@ import randfacts
 from googletrans import Translator
 from PIL import Image
 from main import text_recognition
+from api import my_api
 
-bot = telebot.TeleBot("6137716265:AAFK0DHeAqnD-LKtwnbAYSgsAFPbOMuITvQ")
+bot = telebot.TeleBot(my_api.telegram_bot)
 translator = Translator()
 
 birdhday = {"Андрей": "16.06", "Карина": "10.07", "Дима": "17.06", "Богдан": "14.06", "Аршам": "29.02", "Илья": "25.11", "Карина 2": "02.08","Карен": "03.12","Анаит": "15.07"}
