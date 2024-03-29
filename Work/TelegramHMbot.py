@@ -1,25 +1,14 @@
-from api import my_api
 import telebot
-import os
+from telebot import types
 import randfacts
 from googletrans import Translator
 from PIL import Image
-import pytesseract
+from main import text_recognition
 
-bot = telebot.TeleBot(my_api.telegram_bot)
+bot = telebot.TeleBot("6137716265:AAFK0DHeAqnD-LKtwnbAYSgsAFPbOMuITvQ")
 translator = Translator()
 
-birdhday = {"Андрей": "16.06",
-             "Карина": "10.07", 
-             "Дима": "17.06",
-             "Богдан": "14.06", 
-             "Аршам": "29.02", 
-             "Илья": "25.11", 
-             "Карина 2": "02.08",
-             "Карен": "03.12",
-             "Анаит": "15.07"}
-
-help = 'Для пользования ботом нужно ввести нужную команду:\n /help - подсказки\n /start - общие правила\n /bd - дни рождения\n /facts - случайный факт\n /photo - скан штрихкода'
+birdhday = {"Андрей": "16.06", "Карина": "10.07", "Дима": "17.06", "Богдан": "14.06", "Аршам": "29.02", "Илья": "25.11", "Карина 2": "02.08","Карен": "03.12","Анаит": "15.07"}
 
 def bd():
     message = "Дни рождения:\n"
@@ -31,17 +20,6 @@ def bd():
 def send_birthday(message):
     bot.reply_to(message, bd())
 
-# def send_msg(message):
-#     TOKEN = my_api.telegram_bot
-#     chat_id = "677863095"
-#     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={chat_id}&text={message}"
-#     result = requests.get(url).json()
-#     print(result)
-    
-@bot.message_handler(commands=['help'])
-def send_help(message):
-    bot.reply_to(message, help)
-
 @bot.message_handler(commands=['facts'])
 def facts(message):
     fact = randfacts.get_fact(False)
@@ -49,46 +27,57 @@ def facts(message):
     bot.reply_to(message, translation.text)
     
 @bot.message_handler(commands=['start'])
-def send_start(message):
+def send_help(message):
     bot.reply_to(message, "Привет, я бот ебалот для управления чем-то там... Напиши /help или иди работай дальше")
 
-# bot.polling()
-#pip install python-barcode 
-#pip install "python-barcode[images]"
-#pip install paddlepaddle
+@bot.message_handler(commands=['help'])
+def send_photo_with_button(message):
+    markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
+    button_photo = types.KeyboardButton('Скан штрихкода')
+    button_bd = types.KeyboardButton('Дни рождения')
+    button_facts = types.KeyboardButton('Случайный факт')
+    button_start = types.KeyboardButton('Как пользоваться')
+    markup.add(button_photo, button_bd, button_facts, button_start)
+    bot.send_message(message.chat.id, "Выберите команду:", reply_markup=markup)
 
-path = os.getcwd()
-print(path)
-image_path = "/usr/local/bin/python3 /Users/karenvardanian/Desktop/Python/Work/111.jpg"
-# image1 = Image.open("../Work/111.jpg")
-# image = Image.open("./111.jpg")
-# image2 = Image.open("123.jpg")
-image3 = Image.open(image_path)
+@bot.message_handler(func=lambda message: message.text == 'Скан штрихкода')
+def handle_scan(message):
+    bot.reply_to(message, "Вы выбрали скан штрихкода.")
 
-text = pytesseract.image_to_string(image3)
+@bot.message_handler(func=lambda message: message.text == 'Дни рождения')
+def handle_bd(message):
+    send_birthday(message)
 
-print(text)
-# pipeline = keras_ocr.pipeline.Pipeline()
-# prediction_groups = pipeline.recognize(image)
+@bot.message_handler(func=lambda message: message.text == 'Случайный факт')
+def handle_facts(message):
+    facts(message)
 
-# for ax, image, predictions in zip(axs, image, prediction_groups):
-#     keras_ocr.tools.drawAnnotations(image=image, predictions=predictions, ax=ax)
+@bot.message_handler(func=lambda message: message.text == 'Как пользоваться')
+def handle_help(message):
+    send_help(message)
 
-# decoded = decode(image_barcode)
-# print(decoded[0].data.decode("utf-8"))
+@bot.message_handler(content_types=['photo'])
+def handle_photo(message):
+    bot.reply_to(message, "Фотография получена. Обработка началась...")
+    bot.send_chat_action(message.chat.id, 'typing')
+    
+    photo = message.photo[-1]  
+    file_id = photo.file_id  
+    file_info = bot.get_file(file_id) 
+    file = bot.download_file(file_info.file_path) 
 
+    # Теперь у вас есть файл фотографии в переменной 'file', и вы можете выполнить необходимые действия с ним
 
-# barcodes = pyzbar._decode_symbols(image)
+    # Например, можно сохранить фотографию на сервере
+    with open("photo.jpg", "wb") as photo_file:
+        photo_file.write(file)
 
-# for barcode in barcodes:
-#     text = barcode.data.decode("utf-8")
-#     print(text)
+    recognized_text = text_recognition('photo.jpg')
+    if recognized_text == "Штрихкод не распознан!":
+        bot.reply_to(message, "Плохое качество фотографии, попробоуйте снова!")
+    else:
+        bot.reply_to(message, f"[Link H&M: ](https://www2.hm.com/pl_pl/productpage.{recognized_text}.html)")
+    # Или отправить пользователю ответ о получении фотографии
+    
+bot.polling(non_stop=True)
 
-# ocr = "OB 0722169 001 C15"
-
-# def convert_to_link(text):
-#     result = text.replace(' ', '')[2:][:-3]
-#     print(result)
-#     return f"https://www2.hm.com/sv_se/productpage.{result}.html"
-
-# convert_to_link(ocr)
