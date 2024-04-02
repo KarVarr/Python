@@ -71,7 +71,6 @@ def handle_photo(message):
             photo_file.write(file)
 
         recognized_text = text_recognition('photo.jpg')
-        # bot.reply_to(message, f"[Link H&M: ](https://www2.hm.com/pl_pl/productpage.{recognized_text}.html)")
         if recognized_text != "Штрихкод не распознан!":
             bot.reply_to(message, f"[Link H&M: ](https://www2.hm.com/pl_pl/productpage.{recognized_text}.html)")
         else:
