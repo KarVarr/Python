@@ -2,7 +2,13 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
+# headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'Accept-Language': 'en-US,en;q=0.9'
+}
+
 # url = "https://www2.hm.com/en_us/productpage.0685816185.html"
 url = 'https://www2.hm.com/en_us/productpage.1213473001.html'
 
@@ -15,7 +21,9 @@ try:
     product_color_article = soup.find('div', class_ = 'product-colors')
     product_name_price = soup.find('section', class_ = 'product-name-price')
     reviews_section = soup.find('div', class_ = 'details parbase')
-    product = soup.find('div', class_ = 'product parbase').find_all('hm-product-reviews-summary-w-c')
+    inner = soup.find('div', class_ = 'column2')
+    product = soup.find('div', class_='product parbase').find_all('hm-product-reviews-summary-w-c')
+    
     print(product)
 
     if product_color_article:
