@@ -26,7 +26,7 @@ with requests.Session() as session:
         inner = sub_content.find('div', class_ = "inner")
         product_name_price = inner.find('section', class_ = "product-name-price")
         title = product_name_price.find('hm-product-name', id = "js-product-name").text
-        print(title)
+        print(product_name_price)
 
         price_parbase = product_name_price.find('div', class_ = "price")
         primaty_row = price_parbase.find('div', class_ = "primary-row")
@@ -35,9 +35,9 @@ with requests.Session() as session:
         # sp = price.find("div")
         # print(primaty_row)
 
-        product_colors = column2.find('div', class_ = "product-colors")
-        color = product_colors.find_previous_sibling('h3', class_ = "product-input-label").text
-        print(f"color: {color}")
+        # product_colors = column2.find('div', class_ = "product-colors")
+        # color = product_colors.find_previous_sibling('h3', class_ = "product-input-label").text
+        # print(f"color: {color}")
 
 
         delivery_information_wrapper = column2.find('div', id = "delivery-information-wrapper")
